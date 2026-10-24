@@ -1,0 +1,33 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you expect instead?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: blobtype version
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+  - type: input
+    id: provider
+    attributes:
+      label: Provider / model / mode (batch or live)
+  - type: input
+    id: target
+    attributes:
+      label: App you were typing into
+      description: Some apps (elevated windows, games with anti-cheat) block simulated input.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log output
+      description: "Remove anything sensitive. Never paste API keys."

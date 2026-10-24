@@ -1,0 +1,65 @@
+# blobtype configuration
+# Location: %APPDATA%\blobtype\config.toml (created with these defaults on first run).
+# Changes are picked up on the next recording; the hotkeys need an app restart.
+# API keys are NOT stored here: set them in the settings window (left-click the
+# tray icon), which writes %APPDATA%\blobtype\.env, or use environment variables.
+
+# Global hotkey that starts / stops recording (e.g. "Ctrl+Space", "Ctrl+Alt+D").
+hotkey = "Ctrl+Space"
+
+# Cancels a running recording without sending anything. Only active while recording.
+cancel_hotkey = "Escape"
+
+# Turn the hotkey off while a fullscreen app (most games) is in the foreground,
+# so the key combination reaches the game instead of starting a recording.
+pause_in_fullscreen = true
+
+# Types the last transcript again, e.g. when it went to the wrong window.
+# Always typed, never pasted, so your clipboard is left alone. Empty = off.
+last_hotkey = "Ctrl+Shift+Space"
+
+# "batch": record, then transcribe once you stop.
+# "live":  stream while you speak and type text incrementally (see [live]).
+mode = "batch"
+
+# "type":  type the text with simulated keystrokes (default, keeps your clipboard).
+# "paste": put it on the clipboard and press Ctrl+V (faster for long text; the
+#          previous text clipboard content is restored afterwards).
+output = "type"
+
+# "auto" or an ISO-639-1 code such as "en", "de", "fr".
+language = "auto"
+
+# Part of the input device name (case-insensitive). Empty = system default.
+microphone = ""
+
+# Short start/stop sounds.
+sounds = true
+
+# Recording is stopped and transcribed automatically after this many seconds.
+max_recording_secs = 120
+
+[stt]
+# groq | openai | deepgram | assemblyai | elevenlabs | mistral | google | openai-compatible
+provider = "groq"
+# Empty = provider default (groq: whisper-large-v3-turbo).
+model = ""
+# Empty = provider default. Required for "openai-compatible",
+# e.g. "http://localhost:8000/v1" for a self-hosted whisper server.
+base_url = ""
+# Name of the env var that holds the key. Empty = provider default (e.g. GROQ_API_KEY).
+api_key_env = ""
+
+[live]
+# Used when mode = "live".  openai | deepgram
+provider = "openai"
+# Empty = default (openai: gpt-live-transcribe, deepgram: nova-3).
+model = ""
+
+[discord]
+# Press `key` when a recording starts and again when it stops. In Discord, bind
+# it to "Toggle Mute" (Settings > Keybinds); the settings window can send the
+# key for you while Discord records the keybind.
+mute = false
+# F1 .. F24. F13-F24 exist on no physical keyboard, so they clash with nothing.
+key = "F24"

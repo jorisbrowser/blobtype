@@ -1,0 +1,5 @@
+/target
+/src-tauri/gen
+.env
+*.log
+.DS_Store

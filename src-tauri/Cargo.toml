@@ -1,0 +1,28 @@
+[package]
+name = "blobtype"
+description = "Press a hotkey, speak, and the text is typed into whatever app you were in."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version = "1.77.2"
+
+[lib]
+name = "blobtype_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+blobtype-core = { path = "../crates/blobtype-core" }
+blobtype-input = { path = "../crates/blobtype-input" }
+cpal = "0.15"
+log = "0.4"
+serde = { version = "1", features = ["derive"] }
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-autostart = "2"
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-log = "2"
+tauri-plugin-single-instance = "2"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time"] }

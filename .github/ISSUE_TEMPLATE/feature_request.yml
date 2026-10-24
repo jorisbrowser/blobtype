@@ -1,0 +1,15 @@
+name: Feature request
+description: Suggest an idea or a new provider
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+    validations:
+      required: true
+  - type: textarea
+    id: docs
+    attributes:
+      label: Links
+      description: For a new provider, link its speech-to-text API docs.

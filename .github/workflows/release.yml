@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    # Releases are built in the public repo only; this private repo pushes its
+    # tags there (see sync-public.yml).
+    if: github.repository == 'jorisbrowser/blobtype'
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      # Prebuilt CLI from npm: seconds instead of compiling it with cargo.
+      - name: Install Tauri CLI
+        run: npm install --global @tauri-apps/cli@2
+      # The draft's text: this version's CHANGELOG.md section plus install notes.
+      # Add a one-line intro by hand before publishing.
+      - name: Release notes
+        id: notes
+        shell: bash
+        run: |
+          version=${GITHUB_REF_NAME#v}
+          changes=$(awk -v v="$version" '
+            /^## \[/ { p = index($0, "[" v "]") > 0; next }
+            p' CHANGELOG.md | sed 's/^### /## /' | git stripspace |
+            sed -e ':a' -e 'N' -e '$!ba' -e 's/\n  / /g')  # join wrapped list items
+          if [ -z "$changes" ]; then
+            echo "::error::CHANGELOG.md has no section for $version"
+            exit 1
+          fi
+          {
+            echo "version=$version"
+            echo "body<<NOTES_END"
+            echo "$changes"
+            echo
+            echo "## Install"
+            echo
+            echo "1. Download \`blobtype_${version}_x64-setup.exe\` below and run it. It updates an existing installation."
+            echo "2. Press \`Ctrl + Space\`, talk, press it again."
+            echo
+            echo "The installer is not code-signed yet, so Windows SmartScreen may warn you. Click **More info**, then **Run anyway**."
+            echo
+            echo "Requires Windows 10 or 11."
+            echo "NOTES_END"
+          } >> "$GITHUB_OUTPUT"
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tauriScript: tauri
+          projectPath: .
+          tagName: ${{ github.ref_name }}
+          releaseName: blobtype ${{ steps.notes.outputs.version }}
+          releaseBody: ${{ steps.notes.outputs.body }}
+          releaseDraft: true

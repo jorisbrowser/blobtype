@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>blobtype</title>
+    <link rel="stylesheet" href="settings.css" />
+  </head>
+  <body>
+    <!-- ============ first-run guide ============ -->
+    <main id="guide" class="view" hidden>
+      <div class="progress" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+      <section class="step" data-step="0">
+        <div class="hero-blob" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <h1>Welcome to blobtype</h1>
+        <p class="lead">Press a shortcut, speak, and your words are typed into whatever app you're using. Setup takes about a minute.</p>
+        <div class="actions"><button class="primary" data-next>Get started</button></div>
+      </section>
+
+      <section class="step" data-step="1">
+        <h1>Choose a speech service</h1>
+        <p class="lead">blobtype sends your recording to a speech-to-text service of your choice. You use your own account with them.</p>
+        <div id="provider-cards" class="cards" role="radiogroup" aria-label="Speech service"></div>
+        <div class="actions">
+          <button class="ghost" data-back>Back</button>
+          <button class="primary" data-next>Continue</button>
+        </div>
+      </section>
+
+      <section class="step" data-step="2">
+        <h1 id="connect-title">Connect</h1>
+        <ol class="howto" id="howto-key">
+          <li>
+            <span>Create a key on the provider's website.</span>
+            <button class="secondary" id="g-open-key">Open website</button>
+          </li>
+          <li>
+            <span>Copy the key and paste it here.</span>
+            <input id="g-key" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your API key" />
+          </li>
+        </ol>
+        <div id="g-hosted" hidden>
+          <label for="g-url">Server address</label>
+          <input id="g-url" type="text" spellcheck="false" placeholder="http://localhost:8000/v1" />
+          <label for="g-hosted-key">API key <span class="opt">(optional)</span></label>
+          <input id="g-hosted-key" type="password" autocomplete="off" spellcheck="false" />
+        </div>
+        <p id="g-status" class="status" role="status"></p>
+        <div class="actions">
+          <button class="ghost" data-back>Back</button>
+          <button class="link" id="g-skip" hidden>Save without testing</button>
+          <button class="primary" id="g-connect">Connect</button>
+        </div>
+      </section>
+
+      <section class="step" data-step="3">
+        <h1>You're all set</h1>
+        <p class="lead">Press <span class="hk" data-hotkey></span>, say something, then press it again. Try it right here:</p>
+        <textarea id="g-try" rows="4" placeholder="Click here, then press the shortcut and talk…"></textarea>
+        <p class="hint">blobtype now lives in the tray, next to the clock. Click its icon whenever you want to change something.</p>
+        <div class="actions"><button class="primary" id="g-finish">Done</button></div>
+      </section>
+    </main>
+
+    <!-- ============ settings ============ -->
+    <main id="settings" class="view" hidden>
+      <header class="top">
+        <span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <div>
+          <h1>blobtype</h1>
+          <p id="ready-line" class="muted"></p>
+        </div>
+      </header>
+
+      <section class="group">
+        <div class="field">
+          <label for="provider">Speech service</label>
+          <select id="provider"></select>
+          <p id="provider-note" class="hint"></p>
+        </div>
+        <div class="field" id="key-field">
+          <label for="key">API key</label>
+          <div class="row">
+            <input id="key" type="password" autocomplete="off" spellcheck="false" />
+            <button class="secondary" id="test">Test</button>
+          </div>
+          <p class="hint"><a href="#" id="get-key">Get a key</a></p>
+        </div>
+        <div class="field" id="url-field" hidden>
+          <label for="base-url">Server address</label>
+          <input id="base-url" type="text" spellcheck="false" placeholder="http://localhost:8000/v1" />
+        </div>
+        <div class="field">
+          <label for="hotkey">Shortcut</label>
+          <button id="hotkey" class="capture" type="button" aria-describedby="hotkey-hint"></button>
+          <p id="hotkey-hint" class="hint">Click, then press the keys you want. <kbd>Esc</kbd> cancels a recording.</p>
+        </div>
+        <div class="field">
+          <label for="last-hotkey">Insert last dictation again</label>
+          <button id="last-hotkey" class="capture" type="button" aria-describedby="last-hotkey-hint"></button>
+          <p id="last-hotkey-hint" class="hint">Types your last dictation once more, for when it went to the wrong window. Your clipboard is never touched. <kbd>Backspace</kbd> while recording the shortcut turns it off.</p>
+        </div>
+        <div class="field">
+          <label for="language">Language</label>
+          <select id="language">
+            <option value="auto">Detect automatically</option>
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+            <option value="fr">Français</option>
+            <option value="es">Español</option>
+            <option value="it">Italiano</option>
+            <option value="nl">Nederlands</option>
+            <option value="pt">Português</option>
+            <option value="pl">Polski</option>
+            <option value="tr">Türkçe</option>
+            <option value="uk">Українська</option>
+            <option value="ja">日本語</option>
+            <option value="zh">中文</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="microphone">Microphone</label>
+          <select id="microphone"></select>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="autostart" />
+          <span><b>Start with Windows</b></span>
+        </label>
+      </section>
+
+      <details class="group advanced">
+        <summary>Advanced</summary>
+        <label class="toggle">
+          <input type="checkbox" id="live" />
+          <span><b>Live typing</b><small id="live-hint">Words appear while you speak.</small></span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="sounds" />
+          <span><b>Sounds</b><small>A short tone when recording starts and stops.</small></span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="discord" />
+          <span><b>Mute Discord while recording</b><small>Presses a key when recording starts and stops.</small></span>
+        </label>
+        <div class="field" id="discord-setup" hidden>
+          <label for="discord-key">Discord key</label>
+          <div class="row">
+            <select id="discord-key"></select>
+            <button class="secondary" type="button" id="discord-send">Send key in 3 s</button>
+          </div>
+          <p class="hint">In Discord, open Settings &rsaquo; Keybinds, add a keybind with the action <b>Toggle Mute</b>, click <b>Record Keybind</b>, then click <b>Send key in 3 s</b> here.</p>
+        </div>
+        <div class="field">
+          <label for="paste">Insert text by</label>
+          <select id="paste">
+            <option value="false">Typing (default)</option>
+            <option value="true">Pasting (faster for long text)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="max">Stop recording after</label>
+          <select id="max">
+            <option value="60">1 minute</option>
+            <option value="120">2 minutes</option>
+            <option value="300">5 minutes</option>
+            <option value="600">10 minutes</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="model">Model</label>
+          <input id="model" type="text" spellcheck="false" placeholder="Provider default" />
+        </div>
+        <p class="hint"><a href="#" id="config">Open config file</a></p>
+      </details>
+
+      <p class="extras"><a href="#" id="rerun">Run setup again</a></p>
+
+      <footer class="savebar">
+        <span id="status" class="status" role="status"></span>
+        <button class="primary" id="save" disabled>Save</button>
+      </footer>
+    </main>
+
+    <script src="settings.js"></script>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+[package]
+name = "blobtype-core"
+description = "Platform-independent core of blobtype: config, audio helpers, STT providers, live transcription"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+async-trait = "0.1"
+base64 = "0.22"
+dotenvy = "0.15"
+futures-util = "0.3"
+log = "0.4"
+reqwest = { version = "0.12", default-features = false, features = ["json", "multipart", "rustls-tls"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "1"
+tokio = { version = "1", features = ["rt", "macros", "sync", "time"] }
+tokio-tungstenite = { version = "0.24", features = ["rustls-tls-webpki-roots"] }
+toml = "0.8"
+toml_edit = "0.20"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "net", "io-util", "time"] }
